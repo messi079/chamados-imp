@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Chamados - Manutenção de Impressoras</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="text-center mb-5">
+            <div class="logo-placeholder d-inline-block mb-3">
+                <img src="https://placehold.co/100x80/007bff/ffffff?text=Logo&font=inter" alt="Logo da Empresa" class="mx-auto h-auto rounded-lg" style="max-width: 100px;">
+            </div>
+            <h1 class="display-5 fw-bold text-dark">Painel de Controle de Chamados</h1>
+            <p class="fs-5 text-muted">Gestão simplificada para manutenção de impressoras.</p>
+        </div>
+
+        <div class="mb-4">
+            <button class="btn btn-primary btn-lg d-inline-flex align-items-center" onclick="toggleForm()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-circle-fill me-2" viewBox="0 0 16 16">
+                  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
+                </svg>
+                Abrir Novo Chamado
+            </button>
+        </div>
+
+        <div id="formNovoChamado" class="mb-5 p-4 md:p-6 bg-white rounded-lg">
+            <h4 class="fs-4 fw-semibold text-dark mb-4">Registrar Novo Chamado</h4>
+            <form id="ticketForm">
+                <div class="row g-3">
+                    <div class="col-md-6 mb-3">
+                        <label for="cliente" class="form-label fw-medium">Nome do Cliente:</label>
+                        <input type="text" class="form-control" id="cliente" placeholder="Ex: Empresa Fantasia Ltda" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="contato" class="form-label fw-medium">Contato (Telefone ou Email):</label>
+                        <input type="text" class="form-control" id="contato" placeholder="Ex: (00) 91234-5678 ou email@exemplo.com" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="impressora" class="form-label fw-medium">Modelo da Impressora:</label>
+                        <input type="text" class="form-control" id="impressora" placeholder="Ex: HP LaserJet Pro M404dn" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="serie" class="form-label fw-medium">Número de Série (Opcional):</label>
+                        <input type="text" class="form-control" id="serie" placeholder="Ex: BRJ1234567">
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label for="problema" class="form-label fw-medium">Descrição do Problema:</label>
+                        <textarea class="form-control" id="problema" rows="3" placeholder="Descreva detalhadamente o problema encontrado..." required></textarea>
+                    </div>
+                </div>
+                <div class="mt-4 d-flex justify-content-end">
+                    <button type="button" class="btn btn-secondary me-2" onclick="toggleForm()">Cancelar</button>
+                    <button type="submit" class="btn btn-success d-inline-flex align-items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send-fill me-2" viewBox="0 0 16 16">
+                          <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
+                        </svg>
+                        Enviar Chamado
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="card-header p-3">
+                <h4 class="fs-4 fw-semibold text-dark mb-0">Chamados em Andamento</h4>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th class="p-3">#ID</th>
+                                <th class="p-3">Abertura</th>
+                                <th class="p-3">Cliente</th>
+                                <th class="p-3">Impressora</th>
+                                <th class="p-3">Problema</th>
+                                <th class="p-3">Status</th>
+                                <th class="p-3">Técnico</th>
+                                <th class="p-3 text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listaChamados">
+                            <tr>
+                                <td class="p-3">101</td>
+                                <td class="p-3">25/05/2025</td>
+                                <td class="p-3">Empresa ABC</td>
+                                <td class="p-3">HP LaserJet Pro M404</td>
+                                <td class="p-3">Não está imprimindo</td>
+                                <td class="p-3"><span class="badge bg-danger rounded-pill">Aberto</span></td>
+                                <td class="p-3">-</td>
+                                <td class="p-3 text-center">
+                                    <button class="btn btn-sm btn-info text-white" onclick="showDetailsModal(101, 'Empresa ABC', 'HP LaserJet Pro M404', 'Não está imprimindo', 'Aberto', '-', '25/05/2025')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16"><path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/><path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/></svg>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-3">102</td>
+                                <td class="p-3">26/05/2025</td>
+                                <td class="p-3">Escritório XYZ</td>
+                                <td class="p-3">Epson EcoTank L3150</td>
+                                <td class="p-3">Falhas na impressão colorida</td>
+                                <td class="p-3"><span class="badge bg-warning text-dark rounded-pill">Em Análise</span></td>
+                                <td class="p-3">Carlos</td>
+                                <td class="p-3 text-center">
+                                    <button class="btn btn-sm btn-info text-white" onclick="showDetailsModal(102, 'Escritório XYZ', 'Epson EcoTank L3150', 'Falhas na impressão colorida', 'Em Análise', 'Carlos', '26/05/2025')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16"><path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/><path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/></svg>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                 <p id="noOpenTicketsMessage" class="p-3 text-muted text-center" style="display: none;">Nenhum chamado em andamento no momento.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header p-3">
+                <h4 class="fs-4 fw-semibold text-dark mb-0">Chamados Finalizados</h4>
+            </div>
+             <div class="card-body p-0">
+                 <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th class="p-3">#ID</th>
+                                <th class="p-3">Finalização</th>
+                                <th class="p-3">Cliente</th>
+                                <th class="p-3">Impressora</th>
+                                <th class="p-3">Status</th>
+                                <th class="p-3">Técnico</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="p-3">98</td>
+                                <td class="p-3">24/05/2025</td>
+                                <td class="p-3">Consultório Dr. Silva</td>
+                                <td class="p-3">HP DeskJet 2776</td>
+                                <td class="p-3"><span class="badge bg-success rounded-pill">Finalizado</span></td>
+                                <td class="p-3">Ana</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3">99</td>
+                                <td class="p-3">23/05/2025</td>
+                                <td class="p-3">Empresa Soluções Web</td>
+                                <td class="p-3">Brother MFC-L8900CDW</td>
+                                <td class="p-3"><span class="badge bg-success rounded-pill">Finalizado</span></td>
+                                <td class="p-3">Roberto</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                 </div>
+             </div>
+        </div>
+    </div> <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content rounded-lg">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailsModalLabel">Detalhes do Chamado #<span id="modalTicketId"></span></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p><strong>Cliente:</strong> <span id="modalCliente"></span></p>
+                            <p><strong>Impressora:</strong> <span id="modalImpressora"></span></p>
+                            <p><strong>Abertura:</strong> <span id="modalAbertura"></span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Status:</strong> <span id="modalStatus"></span></p>
+                            <p><strong>Técnico:</strong> <span id="modalTecnico"></span></p>
+                        </div>
+                    </div>
+                    <p class="mb-3"><strong>Descrição do Problema:</strong><br><span id="modalProblema" class="d-block p-2 bg-light rounded border"></span></p>
+                    <hr>
+                    <h6 class="mt-3 mb-2 fw-semibold">Histórico de Mensagens/Atualizações:</h6>
+                    <div id="messageHistory" class="mb-3 p-3 bg-light rounded" style="max-height: 200px; overflow-y: auto; border: 1px solid #e9ecef;">
+                        <p class="text-muted small">Nenhuma mensagem ainda.</p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newMessage" class="form-label fw-medium">Adicionar Comentário:</label>
+                        <textarea class="form-control" id="newMessage" rows="2" placeholder="Digite sua mensagem aqui..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary d-inline-flex align-items-center" onclick="addMessage()">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send me-2" viewBox="0 0 16 16"><path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/></svg>
+                        Enviar Mensagem
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="alertModalLabel">Aviso</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+          </div>
+          <div class="modal-body">
+            <p id="alertModalMessage"></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/script.js" defer></script>
+</body>
+</html>
